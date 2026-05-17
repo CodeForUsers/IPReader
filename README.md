@@ -12,6 +12,7 @@
 - 🔍 **Validación de IP:** Comprueba si la entrada es una dirección IPv4 o IPv6 válida.
 - 🌐 **Información de Red:** Obtiene el CIDR, ASN, nombre del proveedor y la organización.
 - 📍 **Geolocalización:** Muestra el país, ciudad, zona horaria y coordenadas (latitud y longitud).
+- 🗺️ **Mapa Interactivo:** Visualiza la ubicación de la IP en un mapa (en la versión web).
 - 🎨 **Interfaz Web:** Versión interactiva y visual con Streamlit.
 
 ---

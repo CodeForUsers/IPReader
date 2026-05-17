@@ -1,14 +1,6 @@
 import streamlit as st
-import requests
-import ipaddress
-
-# Método para validar la IP
-def validar_ip(ip):
-    try:
-        ipaddress.ip_address(ip)
-        return True
-    except ValueError:
-        return False
+import pandas as pd
+from utils import validar_ip, consultar_ip
 
 # Configuración de la página
 st.set_page_config(
@@ -45,12 +37,9 @@ if st.button("Consultar Información"):
         st.error("❌ La dirección IP no es válida. Asegúrate que es una IPv4 o IPv6 válida.")
     else:
         with st.spinner("Buscando información..."):
-            try:
-                url = f"https://ip.guide/{dir_ip}"
-                respuesta = requests.get(url)
-                
-                if respuesta.status_code == 200:
-                    datos = respuesta.json()
+            datos, error = consultar_ip(dir_ip)
+            
+            if not error:
                     
                     st.success(f"✅ Información obtenida para la IP: **{datos.get('ip', dir_ip)}**")
                     
@@ -76,11 +65,17 @@ if st.button("Consultar Información"):
                         st.write(f"**Latitud:** `{location.get('latitude', 'No disponible')}`")
                         st.write(f"**Longitud:** `{location.get('longitude', 'No disponible')}`")
                         
-                else:
-                    st.error(f"❌ No se pudo obtener información. Código de estado: {respuesta.status_code}")
+                    # Añadir mapa si hay coordenadas
+                    lat = location.get('latitude')
+                    lon = location.get('longitude')
                     
-            except Exception as e:
-                st.error(f"❌ Ocurrió un error al conectar con la API: {e}")
+                    if lat and lon:
+                        st.markdown("### 🗺️ Mapa de Ubicación")
+                        df = pd.DataFrame({'latitude': [float(lat)], 'longitude': [float(lon)]})
+                        st.map(df)
+                        
+            else:
+                st.error(f"❌ {error}")
 
 # Pie de página
 st.markdown("---")

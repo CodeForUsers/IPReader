@@ -7,33 +7,23 @@ Fecha: 18/05/2026
 Version: 1.0
 
 """
-import requests
-import ipaddress
-
-#Metodos
-def validarIp(ip):
-    try:
-        ipaddress.ip_address(ip)
-        return True
-    except ValueError:
-        return False
-        
+from utils import validar_ip, consultar_ip
 
 # Inicio del programa
 # Solicitamos al usuario la dirección IP
 dir_ip = input("Introduce la dirección IP: ")
 
-#Validamos la dirección IP
-if  not validarIp(dir_ip):
-    print("La dirección IP no valida, asegurate que es una IP v4 o v6 valida.")
+# Validamos la dirección IP
+if not validar_ip(dir_ip):
+    print("La dirección IP no válida, asegúrate que es una IP v4 o v6 válida.")
     exit()
 
 # Consultamos a la API externa 
-url = f"https://ip.guide/{dir_ip}"
+datos, error = consultar_ip(dir_ip)
 
-respuesta = requests.get(url)
-
-datos = respuesta.json()
+if error:
+    print(f"\n{error}")
+    exit()
 
 # Imprimos los datos
 print(f"\n INFO OBTENIDA DE LA IP: {datos.get('ip', dir_ip)}\n")
